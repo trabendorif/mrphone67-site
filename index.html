@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prise en Charge - Réparation d'Appareils</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-container">
+                    <img src="logo.svg" alt="MR PHONE 67" class="logo">
+                </div>
+                <i class="fas fa-tools"></i>
+                <h1>Prise en Charge</h1>
+            </div>
+            <p class="subtitle">Système de gestion des réparations</p>
+            
+            <!-- Boutons de gestion de base de données -->
+            <div class="database-controls">
+                <button type="button" class="btn btn-database" onclick="showPCList()">
+                    <i class="fas fa-list"></i> Liste PC
+                </button>
+                <button type="button" class="btn btn-database" onclick="showNewPCForm()">
+                    <i class="fas fa-plus-circle"></i> Nouveau PC
+                </button>
+            </div>
+        </header>
+
+        <div class="progress-bar">
+            <div class="step active" data-step="1">
+                <i class="fas fa-user"></i>
+                <span>Client</span>
+            </div>
+            <div class="step" data-step="2">
+                <i class="fas fa-mobile-alt"></i>
+                <span>Appareil</span>
+            </div>
+            <div class="step" data-step="3">
+                <i class="fas fa-wrench"></i>
+                <span>Réparation</span>
+            </div>
+        </div>
+
+        <form id="repairForm" class="repair-form">
+            <!-- Partie 1: Informations Client -->
+            <div class="form-section active" id="section-1">
+                <h2><i class="fas fa-user"></i> Informations Client</h2>
+                
+                <div class="form-group">
+                    <label for="clientName">Nom complet *</label>
+                    <input type="text" id="clientName" name="clientName" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="clientPhone">Téléphone *</label>
+                        <input type="tel" id="clientPhone" name="clientPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientEmail">Email</label>
+                        <input type="email" id="clientEmail" name="clientEmail">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="clientAddress">Adresse</label>
+                    <textarea id="clientAddress" name="clientAddress" rows="3"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" onclick="nextSection(2)">
+                        Suivant <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Partie 2: Informations Appareil -->
+            <div class="form-section" id="section-2">
+                <h2><i class="fas fa-mobile-alt"></i> Informations Appareil</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="deviceType">Type d'appareil *</label>
+                        <select id="deviceType" name="deviceType" required>
+                            <option value="">Sélectionner...</option>
+                            <option value="smartphone">Smartphone</option>
+                            <option value="tablette">Tablette</option>
+                            <option value="pc">PC/Ordinateur</option>
+                            <option value="console">Console de jeu</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="deviceBrand">Marque *</label>
+                        <input type="text" id="deviceBrand" name="deviceBrand" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="deviceModel">Modèle *</label>
+                        <input type="text" id="deviceModel" name="deviceModel" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="deviceColor">Couleur</label>
+                        <input type="text" id="deviceColor" name="deviceColor">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="imeiNumber">Numéro IMEI/Série (facultatif)</label>
+                        <div class="input-with-button">
+                            <input type="text" id="imeiNumber" name="imeiNumber">
+                            <button type="button" class="btn-scan" onclick="scanIMEI()">
+                                <i class="fas fa-qrcode"></i> Scanner
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="serialNumber">Numéro de série (si différent)</label>
+                        <input type="text" id="serialNumber" name="serialNumber">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="deviceCondition">État général de l'appareil</label>
+                    <textarea id="deviceCondition" name="deviceCondition" rows="3" placeholder="Décrivez l'état physique de l'appareil..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="previousSection(1)">
+                        <i class="fas fa-arrow-left"></i> Précédent
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="nextSection(3)">
+                        Suivant <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Partie 3: Informations Réparation -->
+            <div class="form-section" id="section-3">
+                <h2><i class="fas fa-wrench"></i> Informations Réparation</h2>
+                
+                <div class="form-group">
+                    <label for="problemDescription">Description du problème *</label>
+                    <textarea id="problemDescription" name="problemDescription" rows="4" required placeholder="Décrivez le problème rencontré..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="repairType">Type de réparation *</label>
+                        <select id="repairType" name="repairType" required>
+                            <option value="">Sélectionner...</option>
+                            <option value="ecran">Réparation écran</option>
+                            <option value="batterie">Remplacement batterie</option>
+                            <option value="connecteur">Réparation connecteur</option>
+                            <option value="camera">Réparation caméra</option>
+                            <option value="haut-parleur">Réparation haut-parleur</option>
+                            <option value="micro">Réparation micro</option>
+                            <option value="boutons">Réparation boutons</option>
+                            <option value="logiciel">Problème logiciel</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="urgency">Urgence</label>
+                        <select id="urgency" name="urgency">
+                            <option value="normale">Normale</option>
+                            <option value="urgent">Urgent</option>
+                            <option value="express">Express (24h)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="estimatedPrice">Prix estimé (€) *</label>
+                        <input type="number" id="estimatedPrice" name="estimatedPrice" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="estimatedDuration">Durée estimée</label>
+                        <select id="estimatedDuration" name="estimatedDuration">
+                            <option value="1-2h">1-2 heures</option>
+                            <option value="demi-journee">Demi-journée</option>
+                            <option value="1-jour">1 jour</option>
+                            <option value="2-3-jours">2-3 jours</option>
+                            <option value="1-semaine">1 semaine</option>
+                            <option value="plus">Plus d'une semaine</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="accessories">Accessoires fournis</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="accessories" value="chargeur"> Chargeur</label>
+                        <label><input type="checkbox" name="accessories" value="ecouteurs"> Écouteurs</label>
+                        <label><input type="checkbox" name="accessories" value="coque"> Coque/Étui</label>
+                        <label><input type="checkbox" name="accessories" value="carte-sd"> Carte SD</label>
+                        <label><input type="checkbox" name="accessories" value="autre"> Autre</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalNotes">Notes supplémentaires</label>
+                    <textarea id="additionalNotes" name="additionalNotes" rows="3" placeholder="Informations complémentaires..."></textarea>
+                </div>
+
+                <!-- Signature tactile -->
+                <div class="form-group">
+                    <label>Signature du client *</label>
+                    <div class="signature-container">
+                        <canvas id="signatureCanvas" width="400" height="200"></canvas>
+                        <div class="signature-controls">
+                            <button type="button" class="btn btn-secondary" onclick="clearSignature()">
+                                <i class="fas fa-eraser"></i> Effacer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="previousSection(2)">
+                        <i class="fas fa-arrow-left"></i> Précédent
+                    </button>
+                    <button type="button" class="btn btn-success" onclick="generateTicket()">
+                        <i class="fas fa-check"></i> Finaliser la prise en charge
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Actions finales -->
+        <div class="final-actions" id="finalActions" style="display: none;">
+            <div class="client-number">
+                <h3>Numéro client: <span id="clientNumber"></span></h3>
+            </div>
+            
+            <div class="action-buttons">
+                <button type="button" class="btn btn-primary" onclick="sendEmail()">
+                    <i class="fas fa-envelope"></i> Envoyer par email
+                </button>
+                <button type="button" class="btn btn-warning" onclick="printLabel()">
+                    <i class="fas fa-print"></i> Imprimer étiquette
+                </button>
+                <button type="button" class="btn btn-info" onclick="newTicket()">
+                    <i class="fas fa-plus"></i> Nouvelle prise en charge
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour la liste des PC -->
+    <div id="pcListModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-list"></i> Liste des PC en réparation</h3>
+                <span class="close" onclick="closePCListModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="pc-list-controls">
+                    <div class="search-bar">
+                        <input type="text" id="searchPC" placeholder="Rechercher par nom, téléphone ou IMEI..." onkeyup="filterPCList()">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="filter-controls">
+                        <select id="statusFilter" onchange="filterPCList()">
+                            <option value="">Tous les statuts</option>
+                            <option value="en cours">En cours</option>
+                            <option value="terminé">Terminé</option>
+                        </select>
+                        <select id="sortBy" onchange="sortPCList()">
+                            <option value="created_at_desc">Plus récent d'abord</option>
+                            <option value="created_at_asc">Plus ancien d'abord</option>
+                            <option value="client_name_asc">Nom A-Z</option>
+                            <option value="client_name_desc">Nom Z-A</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="pc-list-stats">
+                    <span id="pcCount">0 PC</span>
+                    <span id="statusBreakdown"></span>
+                </div>
+                <div id="pcListContainer">
+                    <div class="loading">Chargement...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour nouveau PC -->
+    <div id="newPCModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus-circle"></i> Ajouter un nouveau PC</h3>
+                <span class="close" onclick="closeNewPCModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="newPCForm">
+                    <div class="form-group">
+                        <label for="newClientName">Nom du client *</label>
+                        <input type="text" id="newClientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newClientPhone">Téléphone *</label>
+                        <input type="tel" id="newClientPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newDeviceType">Type d'appareil *</label>
+                        <select id="newDeviceType" required>
+                            <option value="">Sélectionner...</option>
+                            <option value="smartphone">Smartphone</option>
+                            <option value="tablette">Tablette</option>
+                            <option value="ordinateur">Ordinateur portable</option>
+                            <option value="pc-fixe">PC fixe</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newDeviceBrand">Marque *</label>
+                        <input type="text" id="newDeviceBrand" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newDeviceModel">Modèle *</label>
+                        <input type="text" id="newDeviceModel" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newIMEI">IMEI (facultatif)</label>
+                        <input type="text" id="newIMEI" placeholder="Facultatif">
+                    </div>
+                    <div class="form-group">
+                        <label for="newProblem">Problème décrit *</label>
+                        <textarea id="newProblem" rows="3" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeNewPCModal()">
+                            <i class="fas fa-times"></i> Annuler
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+<script>
+// Mode démonstration pour Netlify
+window.DEMO_MODE = true;
+window.API_BASE = '/api';
+
+// Charger les données de démonstration
+async function loadDemoData() {
+    try {
+        const response = await fetch('/api/phones.json');
+        const data = await response.json();
+        return data.phones;
+    } catch (error) {
+        console.log('Mode démonstration actif');
+        return [
+            {id: 1, brand: 'iPhone', model: '15 Pro', price: 1229, condition: 'Excellent'},
+            {id: 2, brand: 'Samsung', model: 'Galaxy S24', price: 899, condition: 'Très bon'},
+            {id: 3, brand: 'Google', model: 'Pixel 8', price: 699, condition: 'Bon'}
+        ];
+    }
+}
+
+// Remplacer les appels API par les données de démonstration
+if (window.DEMO_MODE) {
+    console.log('🚀 MR PHONE 67 - Mode Démonstration Netlify');
+}
+</script>
+
+</body>
+</html>

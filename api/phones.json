@@ -1,0 +1,30 @@
+{
+  "phones": [
+    {
+      "id": 1,
+      "brand": "iPhone",
+      "model": "15 Pro",
+      "price": 1229,
+      "condition": "Excellent",
+      "image": "logo.svg"
+    },
+    {
+      "id": 2,
+      "brand": "Samsung",
+      "model": "Galaxy S24",
+      "price": 899,
+      "condition": "Très bon",
+      "image": "logo.svg"
+    },
+    {
+      "id": 3,
+      "brand": "Google",
+      "model": "Pixel 8",
+      "price": 699,
+      "condition": "Bon",
+      "image": "logo.svg"
+    }
+  ],
+  "status": "demo_mode",
+  "message": "Version de démonstration - MR PHONE 67"
+}
